@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Track and Caption Any Motion</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>Track and Caption Any Motion: Open-Vocabulary Spatiotemporal Captioning via Trajectory-Conditioned Generation</h1>
+  <p class="sub">Anonymous WACV 2027 Submission &middot; Paper ID 1543</p>
+  <nav><a href="#abstract">Abstract</a><a href="#method">Method</a><a href="#examples">Examples</a><a href="#code">Code</a></nav>
+</header>
+
+<main>
+  <div class="banner">The clips below show model predictions with spatiotemporal annotations
+  (object masks, point tracks, and time-stamped captions). Each clip plays slowly and loops; use the per-clip speed buttons to read along.</div>
+
+  <section id="abstract">
+    <h2>Abstract</h2>
+    <p>We present TCAM (Track and Caption Any Motion), a generative framework that watches a
+video and — with no text query and no region prompt — decides what is moving, describes each motion in
+open vocabulary, locates it in time, and points to the exact trajectories that carry it. Dense point
+trackers follow pixels with sub-object precision but emit no language, while video-language models
+produce fluent descriptions only when handed a query and only from clip-level features that cannot
+resolve which pixels move. TCAM couples tracking and language at point granularity through a
+Caption-Aware Resampler: a small set of learnable queries cross-attends to dense CoTracker3 trajectory
+tokens and distills them into a fixed-length motion context that conditions an otherwise-unmodified
+FLAN-T5 decoder. A single autoregressive pass emits an entire video's events — spanning both sequential
+intervals and several concurrently active subjects — and each &lt;TRK&gt; token fires a lightweight
+pointer over the same trajectory tokens, so captioning and spatial grounding run on one shared
+backbone. A three-term objective supervises caption quality, pointer–mask alignment, and pointer
+diversity using only existing segmentation annotations. Trained on MeViS, STGR, and PLM-Video-Human,
+TCAM is evaluated on spatiotemporal grounding, dense captioning, and point-tracking accuracy at once.</p>
+  </section>
+
+  <section id="method">
+    <h2>Method</h2>
+    <figure class="paperfig">
+      <img src="assets/figures/tcam_landscape.png" alt="The landscape." loading="lazy">
+      <figcaption><b>The landscape.</b> Space, time, and language are the three axes a complete motion description must span. Prior work occupies two-axis corners; TCAM reaches the corner where all three meet.</figcaption>
+    </figure>
+    <figure class="paperfig">
+      <img src="assets/figures/tcam_pipeline.png" alt="The TCAM pipeline." loading="lazy">
+      <figcaption><b>The TCAM pipeline.</b> Frozen CoTracker3 + ViT-B/16 produce trajectory tokens; a Caption-Aware Resampler compresses them into context tokens for a FLAN-T5 encoder; the decoder emits captions with time tokens and a &lt;TRK&gt; pointer per event.</figcaption>
+    </figure>
+  </section>
+
+  <section id="examples">
+    <h2>Qualitative examples</h2>
+    <p class="note">Color = subject. Tinted region = object mask; dots/trails = a random subset of the
+    tracked points; the bar below each clip is the event timeline with a moving playhead and the active
+    caption. Datasets: MeViS, PLM-Video-Human, STGR, and Ref-YouTube-VOS.</p>
+    <h3 class="grouphdr">Sports &amp; multi-event sequences (PLM-Video-Human / STGR)</h3>
+    <div class="grid">
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/table_tennis.mp4" poster="assets/videos/table_tennis.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">PLM-Video-Human</span><b>Table-tennis rally</b><span class="cap">Two players exchange the ball back and forth.</span></figcaption>
+      </figure>
+    </div>
+    <h3 class="grouphdr">Everyday motion (PLM-Video-Human)</h3>
+    <div class="grid">
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/frog.mp4" poster="assets/videos/frog.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">PLM-Video-Human</span><b>Frog-mascot walking</b><span class="cap">A costumed subject moves through a busy street.</span></figcaption>
+      </figure>
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/cooking.mp4" poster="assets/videos/cooking.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">PLM-Video-Human</span><b>Rolling dough</b><span class="cap">Procedural steps: roll &rarr; flip &rarr; take flour &rarr; apply.</span></figcaption>
+      </figure>
+    </div>
+    <h3 class="grouphdr">Referring — one object from a language query (Ref-YouTube-VOS)</h3>
+    <div class="grid">
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/leopard_ref.mp4" poster="assets/videos/leopard_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">Ref-YouTube-VOS</span><b>&ldquo;a leopard walking&rdquo;</b><span class="cap">A single object grounded by a referring expression.</span></figcaption>
+      </figure>
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/fox_ref.mp4" poster="assets/videos/fox_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">Ref-YouTube-VOS</span><b>&ldquo;a fox playing with a purple toy&rdquo;</b><span class="cap">Referring grounding of a single object.</span></figcaption>
+      </figure>
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/elephant_ref.mp4" poster="assets/videos/elephant_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">Ref-YouTube-VOS</span><b>&ldquo;an elephant walking&rdquo;</b><span class="cap">Referring grounding of a single moving animal.</span></figcaption>
+      </figure>
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/crocodile_ref.mp4" poster="assets/videos/crocodile_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">Ref-YouTube-VOS</span><b>&ldquo;a giant crocodile being pulled by people&rdquo;</b><span class="cap">One object referred to by its interaction with others.</span></figcaption>
+      </figure>
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/parrot_ref.mp4" poster="assets/videos/parrot_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">Ref-YouTube-VOS</span><b>&ldquo;a red parrot walking across a room&rdquo;</b><span class="cap">Referring grounding by color and action.</span></figcaption>
+      </figure>
+      <figure class="tile">
+        <div class="vidwrap">
+          <video src="assets/videos/dolphin_ref.mp4" poster="assets/videos/dolphin_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><span class="tag">Ref-YouTube-VOS</span><b>&ldquo;a dolphin swimming&rdquo;</b><span class="cap">Referring grounding of one underwater subject.</span></figcaption>
+      </figure>
+    </div>
+
+  </section>
+
+  <section id="groundtruth">
+    <h2>Additional examples</h2>
+    <p class="note">Additional clips with dense annotation: every point
+    track that lies on each subject is drawn (solid dots + motion trails), tinted by its object mask
+    and colored per subject. The event captions and their frame ranges
+    (<span class="trange">t&hellip;</span>) are listed beside each clip so they are easy to read.</p>
+    <div class="gtgrid">
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/lion_ox.mp4" poster="assets/videos/lion_ox.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>Lion stalks an ox</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;11</span> An ox stands grazing</li><li><span class="trange">t12&ndash;23</span> then turns to face the approaching lion</li></ul></div><div class="gtsubj"><span class="swatch" style="background:#E0431F"></span><ul><li><span class="trange">t0&ndash;11</span> A lion stalks toward the ox</li><li><span class="trange">t12&ndash;23</span> closing in to sniff its prey</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/zebra_horse.mp4" poster="assets/videos/zebra_horse.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>Zebra chases a horse</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;11</span> A brown horse grazes calmly</li><li><span class="trange">t12&ndash;23</span> then flees the charging zebra</li></ul></div><div class="gtsubj"><span class="swatch" style="background:#E0431F"></span><ul><li><span class="trange">t0&ndash;11</span> A zebra breaks into a chase</li><li><span class="trange">t12&ndash;23</span> pursuing the horse</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/squirrel_rabbit.mp4" poster="assets/videos/squirrel_rabbit.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>Squirrel vs. rabbit</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;11</span> A rabbit nibbles, unaware</li><li><span class="trange">t12&ndash;23</span> is pounced on and bolts away</li></ul></div><div class="gtsubj"><span class="swatch" style="background:#E0431F"></span><ul><li><span class="trange">t0&ndash;11</span> A squirrel creeps toward the rabbit</li><li><span class="trange">t12&ndash;23</span> then pounces to attack</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/basketball.mp4" poster="assets/videos/basketball.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>A pass between players</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;4</span> This kid is in a basketball court. He is wearing a blue T-shirt with red and white lines on the sides and he is wearing matching shorts and black shoes over white socks. He has raised his hands to catch the ball. Then after catching the ball he is throwing the ball back towards the other kid and is catching it back. While doing this he is coming forward to the side and his face is towards that kid.</li><li><span class="trange">t4&ndash;7</span> Continue to throw and catch the ball he is still moving forward to the side Then after catching it, he runs towards the net with the ball in his hand and by pressing his right leg, he jumps and after throwing the ball held in his hand, he throws it in the ball net and standing back, waits for the ball to come down.</li><li><span class="trange">t7&ndash;11</span> Continue to wait for the ball to come down then the ball comes down he pushes that ball downwards on the ground by extending his right hand. Being a basket ball, that ball jumps back upwards. Then this child pushes that ball upwards and it comes back upwards. By doing this this child is moving forward to the other side.</li><li><span class="trange">t11&ndash;15</span> While playing with that ball, the child moves forward to the other direction while playing with the ball and stands straight, holding the ball in his hand, he throws it towards the other net and waits for it to come back below.</li></ul></div><div class="gtsubj"><span class="swatch" style="background:#E0431F"></span><ul><li><span class="trange">t0&ndash;4</span> The boy is on the basketball court and is passing the ball to another boy and catching it several times.</li><li><span class="trange">t4&ndash;7</span> The boy leaps and shoots the ball in the ring.</li><li><span class="trange">t8&ndash;15</span> The child dribbles the ball to the other ring away from the camera and shoots it.</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/skateboard.mp4" poster="assets/videos/skateboard.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>Skateboard tricks</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;3</span> A man is moving towards the right frame while standing on a skateboard and looking down. He is facing the right frame.</li><li><span class="trange">t3&ndash;9</span> Then, he jumps, turns around on the skateboard and looks towards the camera while placing his both hands on his hips.</li><li><span class="trange">t9&ndash;15</span> He gets down, holds the skateboard in his right hand and walks towards the camera.</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/dribble.mp4" poster="assets/videos/dribble.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>Dribbling through cones</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;11</span> The boy is dribbling the ball with an obstacle in front of him. He is dribbling ball alternately on his both hands.</li><li><span class="trange">t12&ndash;15</span> As he reached the last cone or obstacle, he walked towards the basketball ring as he lifted the ball and shot it to the basketball ring.</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/dancer.mp4" poster="assets/videos/dancer.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>A dance, many actions</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;0</span> The subject appears in the video, facing the camera with her left arm extending near her face. The subject puts down her left arm and lifts her right arm in the air while she is moving to her right side.</li><li><span class="trange">t1&ndash;1</span> The subject maneuvers her body to the left frame while facing the right to see her companions.</li><li><span class="trange">t1&ndash;2</span> The subject lifts her left arm for a second, then puts it down. As soon as her left arm was down, she then lifted her right arm while rapidly tip-toeing to the right frame.</li><li><span class="trange">t3&ndash;3</span> The subject stops tip-toeing and then raises her left arm as she faces toward the left frame.</li><li><span class="trange">t3&ndash;4</span> The subject maneuvers her body, spinning half to the left frame. Facing away from the camera as she stretches her left arm horizontally.</li><li><span class="trange">t5&ndash;6</span> The subject turns her body toward the camera, still dancing.</li></ul></div></figcaption>
+      </figure>
+      <figure class="gtcard">
+        <div class="vidwrap">
+          <video src="assets/videos/surfer_ref.mp4" poster="assets/videos/surfer_ref.jpg"
+                 muted loop playsinline preload="none"></video>
+          <div class="speed">
+            <button data-rate="0.25">0.25&times;</button>
+            <button data-rate="0.5">0.5&times;</button>
+            <button data-rate="1" class="on">1&times;</button>
+          </div>
+        </div>
+        <figcaption><b>&ldquo;a person riding a wave&rdquo;</b><div class="gtsubj"><span class="swatch" style="background:#2E7DD7"></span><ul><li><span class="trange">t0&ndash;23</span> a person riding a wave</li></ul></div></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section id="code">
+    <h2>Code</h2>
+    <p>An anonymized package of the main scripts (model, training objective, data loaders, trajectory
+    extraction, and this renderer) is available:
+    <a class="dl" href="tcam_code.zip">tcam_code.zip</a> &middot; <a href="code/">browse</a>.</p>
+  </section>
+</main>
+
+<footer>Anonymous submission &mdash; under review. No tracking, no external resources.</footer>
+<script src="script.js"></script>
+</body>
+</html>
