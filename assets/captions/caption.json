@@ -1,0 +1,398 @@
+{
+ "lion_ox": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     11,
+     "An ox stands grazing"
+    ],
+    [
+     12,
+     23,
+     "then turns to face the approaching lion"
+    ]
+   ]
+  },
+  {
+   "color": "#E0431F",
+   "events": [
+    [
+     0,
+     11,
+     "A lion stalks toward the ox"
+    ],
+    [
+     12,
+     23,
+     "closing in to sniff its prey"
+    ]
+   ]
+  }
+ ],
+ "zebra_horse": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     11,
+     "A brown horse grazes calmly"
+    ],
+    [
+     12,
+     23,
+     "then flees the charging zebra"
+    ]
+   ]
+  },
+  {
+   "color": "#E0431F",
+   "events": [
+    [
+     0,
+     11,
+     "A zebra breaks into a chase"
+    ],
+    [
+     12,
+     23,
+     "pursuing the horse"
+    ]
+   ]
+  }
+ ],
+ "squirrel_rabbit": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     11,
+     "A rabbit nibbles, unaware"
+    ],
+    [
+     12,
+     23,
+     "is pounced on and bolts away"
+    ]
+   ]
+  },
+  {
+   "color": "#E0431F",
+   "events": [
+    [
+     0,
+     11,
+     "A squirrel creeps toward the rabbit"
+    ],
+    [
+     12,
+     23,
+     "then pounces to attack"
+    ]
+   ]
+  }
+ ],
+ "goalkeeper": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     3,
+     "A goalkeeper catching a ball"
+    ],
+    [
+     3,
+     6,
+     "The goalkeeper kicking the ball"
+    ],
+    [
+     7,
+     10,
+     "The goalkeeper walking towards the goalpost"
+    ],
+    [
+     10,
+     15,
+     "The goalkeeper saving a ball"
+    ]
+   ]
+  }
+ ],
+ "skateboard": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     3,
+     "A man is moving towards the right frame while standing on a skateboard and looking down. He is facing the right frame."
+    ],
+    [
+     3,
+     9,
+     "Then, he jumps, turns around on the skateboard and looks towards the camera while placing his both hands on his hips."
+    ],
+    [
+     9,
+     15,
+     "He gets down, holds the skateboard in his right hand and walks towards the camera."
+    ]
+   ]
+  }
+ ],
+ "basketball": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     4,
+     "This kid is in a basketball court. He is wearing a blue T-shirt with red and white lines on the sides and he is wearing matching shorts and black shoes over white socks. He has raised his hands to catch the ball. Then after catching the ball he is throwing the ball back towards the other kid and is catching it back. While doing this he is coming forward to the side and his face is towards that kid."
+    ],
+    [
+     4,
+     7,
+     "Continue to throw and catch the ball he is still moving forward to the side Then after catching it, he runs towards the net with the ball in his hand and by pressing his right leg, he jumps and after throwing the ball held in his hand, he throws it in the ball net and standing back, waits for the ball to come down."
+    ],
+    [
+     7,
+     11,
+     "Continue to wait for the ball to come down then the ball comes down he pushes that ball downwards on the ground by extending his right hand. Being a basket ball, that ball jumps back upwards. Then this child pushes that ball upwards and it comes back upwards. By doing this this child is moving forward to the other side."
+    ],
+    [
+     11,
+     15,
+     "While playing with that ball, the child moves forward to the other direction while playing with the ball and stands straight, holding the ball in his hand, he throws it towards the other net and waits for it to come back below."
+    ]
+   ]
+  },
+  {
+   "color": "#E0431F",
+   "events": [
+    [
+     0,
+     4,
+     "The boy is on the basketball court and is passing the ball to another boy and catching it several times."
+    ],
+    [
+     4,
+     7,
+     "The boy leaps and shoots the ball in the ring."
+    ],
+    [
+     8,
+     15,
+     "The child dribbles the ball to the other ring away from the camera and shoots it."
+    ]
+   ]
+  }
+ ],
+ "table_tennis": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     15,
+     "The person is in a playing position, playing table tennis and hitting the ball with his paddle. She is wearing a black jacket and jeans."
+    ]
+   ]
+  },
+  {
+   "color": "#E0431F",
+   "events": [
+    [
+     0,
+     15,
+     "The person is playing table tennis. They move to the right and hit the ball with their right hand. Then they move to the left, hit the ball again. Then again to the right and go on repeating the action multiple times. They are holding the paddle in their right palm."
+    ]
+   ]
+  }
+ ],
+ "dribble": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     11,
+     "The boy is dribbling the ball with an obstacle in front of him. He is dribbling ball alternately on his both hands."
+    ],
+    [
+     12,
+     15,
+     "As he reached the last cone or obstacle, he walked towards the basketball ring as he lifted the ball and shot it to the basketball ring."
+    ]
+   ]
+  }
+ ],
+ "frog": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     5,
+     "The subject is wearing a costume of a frog mascot and holding a bunch of balloons."
+    ],
+    [
+     5,
+     15,
+     "The frog mascot is holding a small stuff toy and looking around the area."
+    ]
+   ]
+  }
+ ],
+ "cooking": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     6,
+     "The young  boy is using a rolling pin to the dough."
+    ],
+    [
+     6,
+     12,
+     "He raises the rolling pin and flips the dough with the help of other person."
+    ],
+    [
+     12,
+     13,
+     "They takes flour from his right side with his right hand."
+    ],
+    [
+     13,
+     15,
+     "The boy puts the flour to the dough."
+    ]
+   ]
+  }
+ ],
+ "dancer": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     0,
+     "The subject appears in the video, facing the camera with her left arm extending near her face. The subject puts down her left arm and lifts her right arm in the air while she is moving to her right side."
+    ],
+    [
+     1,
+     1,
+     "The subject maneuvers her body to the left frame while facing the right to see her companions."
+    ],
+    [
+     1,
+     2,
+     "The subject lifts her left arm for a second, then puts it down. As soon as her left arm was down, she then lifted her right arm while rapidly tip-toeing to the right frame."
+    ],
+    [
+     3,
+     3,
+     "The subject stops tip-toeing and then raises her left arm as she faces toward the left frame."
+    ],
+    [
+     3,
+     4,
+     "The subject maneuvers her body, spinning half to the left frame. Facing away from the camera as she stretches her left arm horizontally."
+    ],
+    [
+     5,
+     6,
+     "The subject turns her body toward the camera, still dancing."
+    ]
+   ]
+  }
+ ],
+ "leopard_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "a leopard walking"
+    ]
+   ]
+  }
+ ],
+ "surfer_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "a person riding a wave"
+    ]
+   ]
+  }
+ ],
+ "fox_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "a fox playing with a purple toy"
+    ]
+   ]
+  }
+ ],
+ "elephant_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "an elephant walking"
+    ]
+   ]
+  }
+ ],
+ "parrot_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "a red parrot walking across a room"
+    ]
+   ]
+  }
+ ],
+ "crocodile_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "a giant crocodile being pulled by people"
+    ]
+   ]
+  }
+ ],
+ "dolphin_ref": [
+  {
+   "color": "#2E7DD7",
+   "events": [
+    [
+     0,
+     23,
+     "a dolphin swimming"
+    ]
+   ]
+  }
+ ]
+}
