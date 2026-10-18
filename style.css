@@ -16,6 +16,8 @@ header{
 }
 header h1{max-width:1000px; margin:0 auto; font-size:1.9rem; line-height:1.25; letter-spacing:-.01em}
 header .sub{color:var(--muted); margin:.5rem 0 1rem; font-size:.95rem}
+header .links{margin:0 0 1rem}
+header .links .dl{margin:0 .3rem}
 nav a{margin:0 .6rem; font-weight:600; font-size:.95rem}
 
 main{max-width:1180px; margin:0 auto; padding:0 20px 60px}
